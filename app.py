@@ -10,6 +10,9 @@ readings = [
     {"name": "patio",      "room": "outside", "temp": 29.8, "online": True},
 ]
 
+
+
+
 def hottest(devices):
     hottest_device = devices[0]
     for device in devices:
@@ -17,22 +20,29 @@ def hottest(devices):
             hottest_device = device
     return hottest_device
 
+
 def average_temp(devices):
     total = 0
     for device in devices:
-        total += device["temp"]
-    return total / len(devices)
+        total = total + device["temp"]
+    return round(total / len(devices), 2)
 
 
 
-    @app.get("/devices")
+
+# Task 1
+@app.get("/devices")
 def get_devices():
     return readings
 
+
+# Task 2 
 @app.get("/devices/hottest")
 def get_hottest():
     return hottest(readings)
 
+
+# Task 3 
 @app.get("/devices/online")
 def get_online():
     online_devices = []
@@ -42,8 +52,7 @@ def get_online():
     return online_devices
 
 
-
-
+# Task 4
 @app.get("/devices/{name}")
 def get_device(name: str):
     for device in readings:
@@ -52,18 +61,20 @@ def get_device(name: str):
     raise HTTPException(status_code=404, detail="No device called " + name)
 
 
+# Task 5
 @app.get("/stats")
 def get_stats():
     return {"average_temperature": average_temp(readings)}
 
 
+# Task 6
 @app.post("/devices", status_code=201)
 def create_device(device: dict):
     readings.append(device)
     return device
 
 
-
+# Task 7 
 @app.get("/rooms/{room}/devices")
 def get_room_devices(room: str):
     room_devices = []
